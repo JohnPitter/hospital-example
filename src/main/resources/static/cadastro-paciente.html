@@ -101,7 +101,7 @@
                 })
                 .then(response => response.json())
                 .then((data) => {
-                    window.location.href = `index.html?nomePaciente=${data.nomePaciente}&corPulseira=${data.corPulseira}`;
+                    window.location.href = `paciente.html?nomePaciente=${data.nomePaciente}&corPulseira=${data.corPulseira}`;
                 })
                 .catch((error) => {
                   console.error('Error:', error);
