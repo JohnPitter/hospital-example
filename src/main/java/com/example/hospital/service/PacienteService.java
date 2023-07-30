@@ -4,12 +4,14 @@ import com.example.hospital.model.Paciente;
 import com.example.hospital.model.Sintomas;
 import com.example.hospital.repository.PacienteRepository;
 import com.example.hospital.request.PacienteRequest;
+import com.example.hospital.response.PacienteResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -31,7 +33,13 @@ public class PacienteService {
 
             this.pacienteRepository.save(paciente);
 
-            return ResponseEntity.ok().body("Paciente cadastrado com sucesso.");
+            PacienteResponse response = PacienteResponse.builder()
+                    .mensagem("Paciente cadastrado com sucesso.")
+                    .nomePaciente(paciente.getNome())
+                    .corPulseira(corEmIngles(paciente.getPulseira()))
+                    .build();
+
+            return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar os dados do paciente");
         }
@@ -59,6 +67,22 @@ public class PacienteService {
         }
 
         return corPulseira;
+    }
+
+    private String corEmIngles(String corEmPortugues){
+        List<String> coresPortugues = Arrays.asList("Vermelho", "Laranja", "Amarelo", "Verde", "Azul");
+        List<String> coresIngles = Arrays.asList("red", "orange", "yellow", "green", "blue");
+
+        String corEmIngles = "";
+
+        for (int i = 0; i < coresPortugues.size(); i++) {
+            if (coresPortugues.get(i).equals(corEmPortugues)) {
+                corEmIngles = coresIngles.get(i);
+                break;
+            }
+        }
+
+        return corEmIngles;
     }
 
     public ResponseEntity verPacientes() {

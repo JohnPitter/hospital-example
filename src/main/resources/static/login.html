@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <!-- Adiciona o CSS do Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
@@ -8,6 +9,8 @@
 
 <div class="container">
     <h2 class="mt-5">Login</h2>
+    <!-- Adiciona uma div para a mensagem de erro -->
+    <div id="error-message" class="mt-2"></div>
 
     <form id="myForm" class="mt-4">
         <div class="form-group">
@@ -34,20 +37,25 @@
           senha: senha
         };
 
-        fetch('http://localhost:8080/login', {
+        fetch('http://localhost:8080/usuarios/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(data)
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            window.location.href = `/index.html?nome=${data.nome}&dataNascimento=${data.dataNascimento}`;
+        .then(response => {
+            if(response.status === 400) {
+                throw new Error('Usuário ou senha inválidos');
+            }
+
+            return response.json()
+        })
+        .then((data) => {
+            window.location.href = `cadastro.html?nome=${data.nome}&dataNascimento=${data.dataNascimento}`;
         })
         .catch((error) => {
-          console.error('Error:', error);
+          document.getElementById('error-message').innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
         });
     });
 </script>

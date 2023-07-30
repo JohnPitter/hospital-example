@@ -1,65 +1,113 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Adiciona o CSS do Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-
 <div class="container">
-    <h2 class="mt-5">Cadastro de Usuario</h2>
-
-    <form id="myForm" class="mt-4">
+    <h2>Cadastro de Paciente</h2>
+    <form id="paciente-form">
         <div class="form-group">
-            <label for="usuario">Usuario:</label>
-            <input type="text" class="form-control" id="usuario" name="usuario">
+            <input type="hidden" class="form-control" id="nome" required>
         </div>
         <div class="form-group">
-            <label for="senha">Senha:</label>
-            <input type="password" class="form-control" id="senha" name="senha">
+            <input type="hidden" class="form-control" id="dataNascimento" required>
         </div>
-        <div class="form-group">
-            <label for="dataNascimento">Data de Nascimento:</label>
-            <input type="date" class="form-control" id="dataNascimento" name="dataNascimento">
+        <div id="sintomas-group">
+            <h3>Sintomas</h3>
+            <!-- sintomas inputs will be added here -->
         </div>
-        <div class="form-group">
-            <label for="nome">Nome:</label>
-            <input type="text" class="form-control" id="nome" name="nome">
-        </div>
-        <button type="submit" class="btn btn-primary">Cadastrar</button>
+        <button type="button" id="submit-button" class="btn btn-primary">Enviar</button>
     </form>
 </div>
-
 <script>
-    document.getElementById('myForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+        window.onload = function() {
+            // Função para obter os parâmetros da URL
+            function getParameterByName(name) {
+                const url = new URL(window.location.href);
+                return url.searchParams.get(name);
+                console.log(url)
+            }
 
-        var usuario = document.getElementById('usuario').value;
-        var senha = document.getElementById('senha').value;
-        var dataNascimento = document.getElementById('dataNascimento').value;
-        var nome = document.getElementById('nome').value;
+            // Obter os parâmetros da URL
+            const nome = getParameterByName('nome');
+            const dataNascimento = getParameterByName('dataNascimento');
 
-        var data = {
-          usuario: usuario,
-          senha: senha,
-          dataNascimento: dataNascimento,
-          nome: nome
+            document.getElementById('nome').value = nome;
+            document.getElementById('dataNascimento').value = dataNascimento;
         };
 
-        fetch('http://localhost:8080/your_endpoint_here', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    });
-</script>
+        const sintomasPerguntas = [
+            { "pergunta" : "Você está consciente e alerta neste momento?", "peso" : 3 },
+            { "pergunta" : "Qual é a sua queixa principal?", "peso" : 1 },
+            { "pergunta" : "Quando começou essa queixa?", "peso" : 2 },
+            { "pergunta" : "Você sofreu alguma lesão?", "peso" : 5 },
+            { "pergunta" : "Em uma escala de 0 a 10, quão forte é a sua dor?", "peso" : 5 },
+            { "pergunta" : "Você está experimentando algum dos seguintes: falta de ar, dor no peito, sangramento incontrolável, fraqueza ou dormência em um lado do corpo?", "peso" : 5 },
+            { "pergunta" : "Você tem algum histórico médico relevante, como doenças cardíacas, diabetes ou asma?", "peso" : 5 },
+            { "pergunta" : "Você tem alergia a algum medicamento?", "peso" : 3 },
+            { "pergunta" : "Você está tomando algum medicamento atualmente?", "peso" : 2 },
+            { "pergunta" : "A sua condição piorou nas últimas horas?", "peso" : 3 }
+        ];
 
+        $(document).ready(function() {
+            function createSintomaInput(sintoma, index) {
+                return `
+                <div class="sintomas">
+                    <div class="form-group">
+                        <label for="pergunta${index}">Pergunta:</label>
+                        <p id="pergunta${index}">${sintoma.pergunta}</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="resposta${index}">Resposta:</label>
+                        <select class="form-control" id="resposta${index}" required>
+                            <option>Sim</option>
+                            <option>Não</option>
+                        </select>
+                    </div>
+                    <input type="hidden" id="peso${index}" value="${sintoma.peso}">
+                </div>
+                `;
+            }
+
+            sintomasPerguntas.forEach((sintoma, index) => {
+                $('#sintomas-group').append(createSintomaInput(sintoma, index));
+            });
+
+            $('#submit-button').click(function() {
+                const nome = $('#nome').val();
+                const dataNascimento = $('#dataNascimento').val();
+                const sintomas = sintomasPerguntas.map((sintoma, index) => ({
+                    pergunta: sintoma.pergunta,
+                    resposta: $(`#resposta${index}`).val(),
+                    peso: $(`#peso${index}`).val(),
+                }));
+
+                const data = {
+                    nome,
+                    dataNascimento,
+                    sintomas,
+                };
+
+                fetch('http://localhost:8080/pacientes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.json())
+                .then((data) => {
+                    window.location.href = `index.html?nomePaciente=${data.nomePaciente}&corPulseira=${data.corPulseira}`;
+                })
+                .catch((error) => {
+                  console.error('Error:', error);
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,26 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Resultado do Login</title>
+    <meta charset="UTF-8">
+    <title>Pulseira do Paciente</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+        .pulseira {
+            border: 2px solid black;
+            padding: 20px;
+            border-radius: 30px;
+            width: 80%;
+            text-align: center;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-<h1>Resultado do Login</h1>
-<div id="resultado"></div>
+<div id="pulseira" class="pulseira">
+    <h2 id="nomePaciente">Nome do Paciente</h2>
+</div>
 
 <script>
-    // Função para obter os parâmetros da URL
     function getParameterByName(name) {
-        const url = new URL(window.location.href);
-        return url.searchParams.get(name);
+       const url = new URL(window.location.href);
+       return url.searchParams.get(name);
     }
 
     // Obter os parâmetros da URL
-    const nome = getParameterByName('nome');
-    const idade = getParameterByName('dataNascimento');
+    const nomePaciente = getParameterByName('nomePaciente');
+    const corPulseira = getParameterByName('corPulseira');
 
-    // Exibir os detalhes da pessoa cadastrada na página
-    const resultadoDiv = document.getElementById('resultado');
-    resultadoDiv.textContent = `Pessoa logada com sucesso! Nome: ${nome}, Data Nascimento: ${dataNasicmento}`;
+    // Altera a cor do fundo da pulseira baseada na cor recebida
+    document.getElementById("pulseira").style.backgroundColor = corPulseira;
+
+    // Substitua "Nome do Paciente" pelo nome real do paciente
+    document.getElementById("nomePaciente").textContent = nomePaciente;
 </script>
+
 </body>
 </html>

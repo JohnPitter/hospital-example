@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class UsuarioResponse {
-    private String nome;
-    private String dataNascimento;
+public class PacienteResponse {
     private String mensagem;
+    private String nomePaciente;
+    private String corPulseira;
 }

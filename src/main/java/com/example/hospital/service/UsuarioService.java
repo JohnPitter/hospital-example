@@ -65,7 +65,8 @@ public class UsuarioService {
                                 .dataNascimento(usuarioEncontrado.getDataNascimento().format(formatter))
                                 .build());
             } else {
-                return ResponseEntity.ok().body("Usuario nao existe na base de dados");
+                UsuarioResponse response = UsuarioResponse.builder().mensagem("Usuario nao existe na base de dados").build();
+                return ResponseEntity.badRequest().body(response);
             }
 
         } catch (Exception e) {
