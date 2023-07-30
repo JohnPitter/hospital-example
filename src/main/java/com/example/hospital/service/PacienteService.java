@@ -49,12 +49,17 @@ public class PacienteService {
 
         String corPulseira = "Azul";
         int pesoTotal = 0;
+        int qtdSim = 0;
 
         for (Sintomas sintoma : sintomas) {
-            pesoTotal += sintoma.getPeso();
+
+            if(sintoma.getResposta() == "Sim"){
+                pesoTotal += sintoma.getPeso();
+                qtdSim += qtdSim;
+            }
         }
 
-        int pesoPorPerguntas = pesoTotal / sintomas.size();
+        int pesoPorPerguntas = pesoTotal / qtdSim;
 
         if (pesoPorPerguntas >= 9) {
             corPulseira = "Vermelha";

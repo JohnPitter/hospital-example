@@ -30,7 +30,15 @@ public class UsuarioService {
                     .build();
 
             this.usuarioRepository.save(usuario);
-            return ResponseEntity.ok().body("Usuario Cadastrado com Sucesso");
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+            UsuarioResponse response = UsuarioResponse.builder()
+                    .nome(dadosUsuario.getUsuario())
+                    .dataNascimento(dadosUsuario.getDataNascimento().format(formatter))
+                    .build();
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }  catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao fazer login");
         }
