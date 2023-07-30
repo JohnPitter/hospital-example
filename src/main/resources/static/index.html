@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resultado do Login</title>
+</head>
+<body>
+<h1>Resultado do Login</h1>
+<div id="resultado"></div>
+
+<script>
+    // Função para obter os parâmetros da URL
+    function getParameterByName(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name);
+    }
+
+    // Obter os parâmetros da URL
+    const nome = getParameterByName('nome');
+    const idade = getParameterByName('dataNascimento');
+
+    // Exibir os detalhes da pessoa cadastrada na página
+    const resultadoDiv = document.getElementById('resultado');
+    resultadoDiv.textContent = `Pessoa logada com sucesso! Nome: ${nome}, Data Nascimento: ${dataNasicmento}`;
+</script>
+</body>
+</html>

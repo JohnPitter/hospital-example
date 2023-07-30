@@ -1,14 +1,12 @@
 package com.example.hospital.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.util.List;
-
-@Entity(name = "sintomas")
+@Entity
 @Data
 public class Sintomas {
     @Id
@@ -17,7 +15,4 @@ public class Sintomas {
     private String pergunta;
     private String resposta;
     private Integer peso;
-
-    @ManyToMany(mappedBy = "sintomas")
-    private List<Paciente> pacientes;
 }
