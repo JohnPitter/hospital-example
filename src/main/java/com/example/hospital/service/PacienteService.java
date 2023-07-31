@@ -39,7 +39,7 @@ public class PacienteService {
                     .corPulseira(corEmIngles(paciente.getPulseira()))
                     .build();
 
-            return ResponseEntity.ok().body(response);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar os dados do paciente");
         }
@@ -49,17 +49,17 @@ public class PacienteService {
 
         String corPulseira = "Azul";
         int pesoTotal = 0;
-        int qtdSim = 0;
+        int qtd = 0;
 
         for (Sintomas sintoma : sintomas) {
 
-            if(sintoma.getResposta() == "Sim"){
+            if(sintoma.getResposta() != "Prefiro nao Responder"){
                 pesoTotal += sintoma.getPeso();
-                qtdSim += qtdSim;
+                qtd++;
             }
         }
 
-        int pesoPorPerguntas = pesoTotal / qtdSim;
+        int pesoPorPerguntas = pesoTotal / qtd;
 
         if (pesoPorPerguntas >= 9) {
             corPulseira = "Vermelha";

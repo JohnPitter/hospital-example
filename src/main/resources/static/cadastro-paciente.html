@@ -42,10 +42,10 @@
 
         const sintomasPerguntas = [
             { "pergunta" : "Você está consciente e alerta neste momento?", "peso" : 3 },
-            { "pergunta" : "Qual é a sua queixa principal?", "peso" : 1 },
-            { "pergunta" : "Quando começou essa queixa?", "peso" : 2 },
+            { "pergunta" : "Você tem uma queixa principal?", "peso" : 1 },
+            { "pergunta" : "Sabe dizer quando começou essa queixa?", "peso" : 2 },
             { "pergunta" : "Você sofreu alguma lesão?", "peso" : 5 },
-            { "pergunta" : "Em uma escala de 0 a 10, quão forte é a sua dor?", "peso" : 5 },
+            { "pergunta" : "Sua dor é muito forte?", "peso" : 5 },
             { "pergunta" : "Você está experimentando algum dos seguintes: falta de ar, dor no peito, sangramento incontrolável, fraqueza ou dormência em um lado do corpo?", "peso" : 5 },
             { "pergunta" : "Você tem algum histórico médico relevante, como doenças cardíacas, diabetes ou asma?", "peso" : 5 },
             { "pergunta" : "Você tem alergia a algum medicamento?", "peso" : 3 },
@@ -65,7 +65,8 @@
                         <label for="resposta${index}">Resposta:</label>
                         <select class="form-control" id="resposta${index}" required>
                             <option>Sim</option>
-                            <option>Não</option>
+                            <option>Nao</option>
+                            <option>Prefiro Nao Responder</option>
                         </select>
                     </div>
                     <input type="hidden" id="peso${index}" value="${sintoma.peso}">
@@ -99,8 +100,12 @@
                     },
                     body: JSON.stringify(data),
                 })
-                .then(response => response.json())
+                .then(response => {
+                    console.log(response)
+                    return response.json()
+                })
                 .then((data) => {
+                    console.log(data)
                     window.location.href = `paciente.html?nomePaciente=${data.nomePaciente}&corPulseira=${data.corPulseira}`;
                 })
                 .catch((error) => {

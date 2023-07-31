@@ -40,7 +40,7 @@ public class UsuarioService {
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }  catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao fazer login");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar usuario");
         }
     }
 
